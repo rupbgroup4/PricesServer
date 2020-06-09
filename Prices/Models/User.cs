@@ -30,6 +30,7 @@ namespace Prices.Models
         public int User_rank { get => user_rankΔ; set => user_rankΔ = value; }
         public double Lon { get => lon; set => lon = value; }
         public double Lat { get => lat; set => lat = value; }
+        public Exception Ex { get; set; }
 
         public void UpdateUserRank(Receipt receipt)
         {

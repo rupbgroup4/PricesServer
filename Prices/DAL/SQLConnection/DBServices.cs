@@ -605,7 +605,9 @@ namespace Prices.DAL.SQLConnection
                 con = new DBConnectionBuilder().Connect("DBConnectionString"); //create a connection to the database using the connection String defined in the web config file
                 string spName = "NUN";
 
+                //Dictionary<string, string> parameters = new Dictionary<string, string> { { "@StatementType", search.Statement_Type } };
                 Dictionary<string, string> parameters = new Dictionary<string, string> { { "@StatementType", search.Statement_Type } };
+                
                 if (search.Model is Item)
                 {
                     int user_rank = (10 + ((search.User.User_rank - 1000) / 15));
@@ -618,7 +620,6 @@ namespace Prices.DAL.SQLConnection
                     parameters.Add("@max_price", search.Max_price.ToString());
                     parameters.Add("@min_price", search.Min_price.ToString());
                     parameters.Add("@user_rank", user_rank.ToString());
-
                 }
                 #region for later
 
