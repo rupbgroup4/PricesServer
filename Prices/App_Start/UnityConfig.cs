@@ -1,4 +1,5 @@
 using Prices.BLL.ItemEntity;
+using Prices.BLL.ListsEntity;
 using Prices.BLL.ReceiptEntity;
 using Prices.BLL.Repository_Interfaces;
 using Prices.BLL.TagEntity;
@@ -24,7 +25,8 @@ namespace Prices
             container.RegisterType<IItemRepository, SQLItemRepository>();
             container.RegisterType<IReceiptRepository, SQLReceiptRepository>();
             container.RegisterType<IUserRepository, SQLUserRepository>();
-            container.RegisterType<ITagRepository, SQLTagRepository>();
+            container.RegisterType<ITagRepository, SQLTagRepository>();//to be deleted...
+            container.RegisterType<IListsRepository, SQLListsRepository>();
             //MY
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);

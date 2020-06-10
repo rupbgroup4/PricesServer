@@ -85,7 +85,8 @@ namespace Prices.DAL.SQLConnection
                 parameters.Add("@user_id", item.User_id);
                 parameters.Add("@item_image", item.Item_image);
                 parameters.Add("@id_type", item.Id_type);
-
+                parameters.Add("@category_id", item.Category.Category_id);
+                parameters.Add("@sub_category_id", item.Sub_category.Sub_category_id);
             }
             else if (type is Tag)
             {
@@ -128,6 +129,22 @@ namespace Prices.DAL.SQLConnection
                 parameters.Add("@state", user.State);
                 parameters.Add("@city", user.City);
                 parameters.Add("@user_rank", user.User_rank.ToString());
+            }
+            else if (type is Category)
+            {
+                Category category = type as Category;
+                spName = "SPCategories";
+                parameters.Add("@id", category.Category_id);
+                parameters.Add("@title", category.Category_title);
+                parameters.Add("@Table", "categories_tbl");
+            }
+            else if (type is SubCategory)
+            {
+                SubCategory subCategory = type as SubCategory;
+                spName = "SPCategories";
+                parameters.Add("@id", subCategory.Sub_category_id);
+                parameters.Add("@title", subCategory.Sub_category_title);
+                parameters.Add("@Table", "sub_categories_tbl");
             }
             else
             {

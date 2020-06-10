@@ -174,11 +174,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="BLL\ListsEntity\SQLListsRepository.cs" />
+    <Compile Include="BLL\Repository_Interfaces\IListsRepository.cs" />
     <Compile Include="BLL\Repository_Interfaces\ITagRepository.cs" />
     <Compile Include="BLL\Repository_Interfaces\IUserRepository.cs" />
     <Compile Include="BLL\TagEntity\SQLTagRepository.cs" />
     <Compile Include="BLL\UserEntity\SQLUserRepository.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
+    <Compile Include="Controllers\ListsController.cs" />
     <Compile Include="Controllers\ReceiptsController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -187,6 +190,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="BLL\ItemEntity\SQLItemRepository.cs" />
     <Compile Include="BLL\ReceiptEntity\SQLReceiptRepository.cs" />
@@ -196,6 +200,7 @@
     <Compile Include="DAL\SQLConnection\DBServices.cs" />
     <Compile Include="Models\Search.cs" />
     <Compile Include="Models\Store.cs" />
+    <Compile Include="Models\SubCategory.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

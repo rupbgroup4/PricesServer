@@ -113,7 +113,7 @@ namespace Prices.Controllers
                 Store = new Store() { Store_id = "0001", Store_name = "כלבו אשדות", Lat = 32.658456, Lon = 35.580300 }
             };
             #endregion
-            //asdf
+            
             repo.AddReceipt(receipt);
 
         }

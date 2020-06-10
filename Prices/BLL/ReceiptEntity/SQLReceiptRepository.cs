@@ -28,6 +28,16 @@ namespace Prices.BLL.ReceiptEntity
                 receipt.Items[i].Receipt_id = receipt.Receipt_id;
                 receipt.Items[i].User_id = receipt.User_id;
                 receipt.Items[i].Id_type = "UserUser";
+                if (receipt.Items[i].Category.Category_title!=null)
+                {
+                    receipt.Items[i].Category.Category_id= Guid.NewGuid().ToString("N");
+                    db.InsertToDB(receipt.Items[i].Category);
+                }
+                if (receipt.Items[i].Sub_category.Sub_category_title != null)
+                {
+                    receipt.Items[i].Sub_category.Sub_category_id= Guid.NewGuid().ToString("N");
+                    db.InsertToDB(receipt.Items[i].Sub_category);
+                }
                 db.InsertToDB(receipt.Items[i]);
                 for (int j = 0; j < receipt.Items[i].Tags.Count; j++)//insert each tag for each item
                 {
