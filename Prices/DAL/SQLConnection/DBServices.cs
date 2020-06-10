@@ -331,6 +331,14 @@ namespace Prices.DAL.SQLConnection
                 {
                     spName = "SPStores";
                 }
+                else if (type is Category)
+                {
+                    spName = "SPCategory";
+                }
+                else if (type is SubCategory)
+                {
+                    spName = "SPSubCategory";
+                }
 
                 Dictionary<string, string> parameters = new Dictionary<string, string> { { "@StatementType", "select" } };
                 SqlCommand cmd = new DBCommandBuilder().SPCreateCommand(spName, con, parameters);
@@ -398,7 +406,6 @@ namespace Prices.DAL.SQLConnection
                 }
                 else if (type is Store)
                 {
-
                     List<Store> list = new List<Store>();
                     while (dr.Read())
                     {
@@ -410,6 +417,34 @@ namespace Prices.DAL.SQLConnection
                         store.Lon = (double)dr["lon"];
 
                         list.Add(store);
+                    }
+                    return list;
+                }
+                else if (type is Category)
+                {
+                    List<Category> list = new List<Category>();
+                    while (dr.Read())
+                    {
+                        Category category = new Category();
+                        // Read till the end of the data into a row
+                        category.Category_id = (string)dr["category_id"];
+                        category.Category_title = (string)dr["category_title"];                        
+
+                        list.Add(category);
+                    }
+                    return list;
+                }
+                else if (type is SubCategory)
+                {
+                    List<SubCategory> list = new List<SubCategory>();
+                    while (dr.Read())
+                    {
+                        SubCategory subCategory = new SubCategory();
+                        // Read till the end of the data into a row
+                        subCategory.Sub_category_id = (string)dr["sub_category_id"];
+                        subCategory.Sub_category_title = (string)dr["sub_category_title"];
+
+                        list.Add(subCategory);
                     }
                     return list;
                 }
@@ -606,7 +641,7 @@ namespace Prices.DAL.SQLConnection
                 string spName = "NUN";
 
                 Dictionary<string, string> parameters = new Dictionary<string, string> { { "@StatementType", search.Statement_Type } };
-                
+
                 if (search.Model is Item)
                 {
                     int user_rank = (10 + ((search.User.User_rank - 1000) / 15));

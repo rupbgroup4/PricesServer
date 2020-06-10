@@ -176,14 +176,11 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="BLL\ListsEntity\SQLListsRepository.cs" />
     <Compile Include="BLL\Repository_Interfaces\IListsRepository.cs" />
-    <Compile Include="BLL\Repository_Interfaces\ITagRepository.cs" />
     <Compile Include="BLL\Repository_Interfaces\IUserRepository.cs" />
-    <Compile Include="BLL\TagEntity\SQLTagRepository.cs" />
     <Compile Include="BLL\UserEntity\SQLUserRepository.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\ListsController.cs" />
     <Compile Include="Controllers\ReceiptsController.cs" />
-    <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\SQLConnection\DBCommandBuilder.cs" />
     <Compile Include="DAL\SQLConnection\DBConnectionBuilder.cs" />

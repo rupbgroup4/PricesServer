@@ -14,12 +14,12 @@ namespace Prices.BLL.ListsEntity
 
         public IEnumerable<Category> GetAllCategories()
         {
-            throw new NotImplementedException();
+            return (List<Category>)db.SPGetAll(new Category());
         }
 
         public IEnumerable<SubCategory> GetAllSubCategories()
         {
-            throw new NotImplementedException();
+            return (List<SubCategory>)db.SPGetAll(new SubCategory());
         }
 
         public IEnumerable<Tag> GetAllTags()

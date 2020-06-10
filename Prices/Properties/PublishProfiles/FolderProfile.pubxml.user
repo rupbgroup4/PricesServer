@@ -6,7 +6,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>C:\Users\ometz\source\repos\Prices\Prices\bin\Release\Publish</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\Users\ometz\OneDrive\מסמכים\GitHub\PricesServer\Prices\bin\Release\Publish</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="Areas/HelpPage/HelpPage.css">
@@ -88,10 +88,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/18/2018 09:44:54</publishTime>
     </File>
     <File Include="bin/Prices.dll">
-      <publishTime>06/05/2020 16:33:35</publishTime>
+      <publishTime>06/10/2020 19:21:31</publishTime>
     </File>
     <File Include="bin/Prices.pdb">
-      <publishTime>06/05/2020 16:33:35</publishTime>
+      <publishTime>06/10/2020 19:21:31</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>05/24/2018 14:38:22</publishTime>
@@ -247,7 +247,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/28/2018 13:01:26</publishTime>
     </File>
     <File Include="bin/System.Web.Http.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>11/28/2018 13:01:00</publishTime>
     </File>
     <File Include="bin/System.Web.Http.WebHost.dll">
       <publishTime>11/28/2018 13:02:56</publishTime>
@@ -382,7 +382,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/08/2020 16:17:42</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>04/23/2020 15:26:37</publishTime>
+      <publishTime>06/10/2020 19:21:32</publishTime>
     </File>
   </ItemGroup>
 </Project>

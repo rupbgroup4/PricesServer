@@ -19,17 +19,19 @@ namespace Prices.Controllers
         {
             return new string[] { "value1", "value2" };
         }
-
+        //GET TAGS
         [Route("api/lists/GetTags")]
         public IEnumerable<Tag> GetTags()
         {
             return repo.GetAllTags();
         }
+        //GET CATEGORIES
         [Route("api/lists/GetCategories")]
         public IEnumerable<Category> GetCategories()
         {
             return repo.GetAllCategories();
         }
+        //GET SUB CATEGORIES
         [Route("api/lists/GetSubCategories")]
         public IEnumerable<SubCategory> GetSubCategories()
         {

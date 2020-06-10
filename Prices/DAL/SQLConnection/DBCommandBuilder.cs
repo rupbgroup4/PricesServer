@@ -133,18 +133,16 @@ namespace Prices.DAL.SQLConnection
             else if (type is Category)
             {
                 Category category = type as Category;
-                spName = "SPCategories";
+                spName = "SPCategory";
                 parameters.Add("@id", category.Category_id);
                 parameters.Add("@title", category.Category_title);
-                parameters.Add("@Table", "categories_tbl");
             }
             else if (type is SubCategory)
             {
                 SubCategory subCategory = type as SubCategory;
-                spName = "SPCategories";
+                spName = "SPSubCategory";
                 parameters.Add("@id", subCategory.Sub_category_id);
                 parameters.Add("@title", subCategory.Sub_category_title);
-                parameters.Add("@Table", "sub_categories_tbl");
             }
             else
             {
