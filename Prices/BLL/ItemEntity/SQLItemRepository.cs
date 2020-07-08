@@ -52,10 +52,13 @@ namespace Prices.BLL.ItemEntity
             bool searchForTags = false;
             if (search.Tags!=null)
             {
-                searchForTags = true;
-                foreach (Tag tag in search.Tags)
+                if (search.Tags.Length > 0)
                 {
-                    searchTags.Add(tag.Tag_id);
+                    searchForTags = true;
+                    foreach (Tag tag in search.Tags)
+                    {
+                        searchTags.Add(tag.Tag_id);
+                    }
                 }
             }
 

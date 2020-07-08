@@ -4,6 +4,9 @@ using Prices.DAL.SQLConnection;
 using Prices.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -14,28 +17,43 @@ namespace Prices.BLL.ReceiptEntity
         DBServices db = new DBServices();
         public Receipt AddReceipt(Receipt receipt)
         {
-            if (receipt.Store.Store_name != null)
+
+            if (!(receipt.Store.Store_name == null || receipt.Store.Store_name == ""))
             {
                 receipt.Store.Store_id = Guid.NewGuid().ToString("N");
                 db.InsertToDB(receipt.Store);//insert new store
             }
             receipt.Receipt_id = Guid.NewGuid().ToString("N");
+            receipt.Receipt_image = Image64BaseToURL(receipt.Receipt_image, receipt.Receipt_id);
             db.InsertToDB(receipt);//insert receipt
+            HandleReceiptItems(receipt);
+            User user = new User();
+            user.User_id = receipt.User_id;
+            user.UpdateUserRank(receipt);
+            db.SPUpdate(user);
 
+            return receipt;
+        }
+
+        private void HandleReceiptItems(Receipt receipt)
+        {
             for (int i = 0; i < receipt.Items.Count; i++)//insert each item
             {
                 receipt.Items[i].Item_id = Guid.NewGuid().ToString("N");
+                if (receipt.Items[i].Id_type == "UserUser")//check if the item is from external api (UserUser or src). if external, Item_image is an src and not base64
+                {
+                    receipt.Items[i].Item_image = Image64BaseToURL(receipt.Items[i].Item_image, receipt.Items[i].Item_id);
+                }
                 receipt.Items[i].Receipt_id = receipt.Receipt_id;
                 receipt.Items[i].User_id = receipt.User_id;
-                receipt.Items[i].Id_type = "UserUser";
-                if (receipt.Items[i].Category.Category_title!=null)
+                if (receipt.Items[i].Category.Category_title != null)
                 {
-                    receipt.Items[i].Category.Category_id= Guid.NewGuid().ToString("N");
+                    receipt.Items[i].Category.Category_id = Guid.NewGuid().ToString("N");
                     db.InsertToDB(receipt.Items[i].Category);
                 }
                 if (receipt.Items[i].Sub_category.Sub_category_title != null)
                 {
-                    receipt.Items[i].Sub_category.Sub_category_id= Guid.NewGuid().ToString("N");
+                    receipt.Items[i].Sub_category.Sub_category_id = Guid.NewGuid().ToString("N");
                     db.InsertToDB(receipt.Items[i].Sub_category);
                 }
                 db.InsertToDB(receipt.Items[i]);
@@ -54,11 +72,31 @@ namespace Prices.BLL.ReceiptEntity
                     }
                 }
             }
-            User user = new User();
-            user.User_id = receipt.User_id;
-            user.UpdateUserRank(receipt);
-            db.SPUpdate(user);
-            return receipt;
+        }
+
+        private string Image64BaseToURL(string base64, string fileName)
+        {
+            try
+            {
+                string serverPath = HttpContext.Current.Server.MapPath("~/UploadedFiles");
+                //data:image/jpeg;base64,/9j/4AAQSkZJ
+                int pFrom = base64.IndexOf("data:image/") + "data:image/".Length;
+                int pTo = base64.IndexOf(";");
+                string type = base64.Substring(pFrom, pTo - pFrom);
+
+                base64 = base64.Substring(base64.IndexOf(",") + 1);
+
+                //Image image = Image.FromStream(new MemoryStream(Convert.FromBase64String(base64)));
+                string imageServerPath = serverPath + "/" + fileName + "." + type;
+                File.WriteAllBytes(imageServerPath, Convert.FromBase64String(base64));
+                //image.Save(imageServerPath, ImageFormat.Jpeg);
+                string imageURL = "http://proj.ruppin.ac.il/bgroup4/prod/server/UploadedFiles/" + fileName + "." + type;
+                return imageURL;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         public bool DeleteReceipt(Receipt receipt)
@@ -68,9 +106,7 @@ namespace Prices.BLL.ReceiptEntity
 
         public IEnumerable<Receipt> GetAllReceipts()
         {
-            Console.WriteLine("hi");
-            return new List<Receipt> { };
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Receipt GetReceiptById(string id)

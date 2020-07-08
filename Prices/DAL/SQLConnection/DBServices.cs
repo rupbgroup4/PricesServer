@@ -552,7 +552,7 @@ namespace Prices.DAL.SQLConnection
                         Tag tag = new Tag();
                         // Read till the end of the data into a row
                         tag.Tag_id = (string)dr["tag_id"];
-
+                        tag.Tag_title = (string)dr["tag_title"];
                         list.Add(tag);
                     }
                     return list;
@@ -644,7 +644,7 @@ namespace Prices.DAL.SQLConnection
 
                 if (search.Model is Item)
                 {
-                    int user_rank = (10 + ((search.User.User_rank - 1000) / 15));
+                    int user_rank = (10 + ((search.User.User_rank - 1000) / 15));//how many results to show
                     user_rank = user_rank > 10 ? user_rank : 10;
                     //user_rank >= 1000 ? user_rank= user_rank:user_rank = 1000;
                     spName = "SPItems";
@@ -788,7 +788,76 @@ namespace Prices.DAL.SQLConnection
         #region Update
         public void SPUpdate<T>(T type)
         {
+            SqlConnection con = null;
 
+            try
+            {
+                con = new DBConnectionBuilder().Connect("DBConnectionString"); //create a connection to the database using the connection String defined in the web config file
+                string spName = "NUN";
+
+                Dictionary<string, string> parameters = new Dictionary<string, string> { { "@StatementType", "Update" } };
+                if (type is User)
+                {
+                    User u = type as User;
+                    spName = "SPUsers";
+                    parameters.Add("@user_id", u.User_id);
+                    parameters.Add("@user_rank", u.User_rank.ToString());
+                }
+                #region for later
+                //if (type is Item)
+                //{
+                //    int user_rank = (10 + ((search.User.User_rank - 1000) / 15));
+                //    user_rank = user_rank > 10 ? user_rank : 10;
+                //    //user_rank >= 1000 ? user_rank= user_rank:user_rank = 1000;
+                //    spName = "SPItems";
+                //    parameters.Add("@user_lat", search.User.Lat.ToString());
+                //    parameters.Add("@user_lon", search.User.Lon.ToString());
+                //    parameters.Add("@max_distance", search.Distance_radius.ToString());
+                //    parameters.Add("@max_price", search.Max_price.ToString());
+                //    parameters.Add("@min_price", search.Min_price.ToString());
+                //    parameters.Add("@user_rank", user_rank.ToString());
+                //}
+                //else if (search.Model is Tag)
+                //{
+                //    spName = "SPItemsTags";
+                //    if (selectType == "SelectByItemId")
+                //    {
+                //        parameters.Add("@item_id", id);
+                //    }
+                //    else if (selectType == "SelectByTagId")
+                //    {
+                //        parameters.Add("@tag_id", id);
+                //    }
+                //}
+                //else if (search.Model is Receipt)
+                //{
+                //    spName = "SPReceipts";
+                //    parameters.Add("@receipt_id", id);
+                //}
+                //else if (search.Model is Store)
+                //{
+                //    spName = "SPStores";
+                //    parameters.Add("@store_id", id);
+                //}
+                #endregion
+                SqlCommand cmd = new DBCommandBuilder().SPCreateCommand(spName, con, parameters);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
         }
         //public void update()
         //{

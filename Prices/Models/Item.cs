@@ -26,7 +26,6 @@ namespace Prices.Models
         private double distance;
         private List<Tag> tags;
         private string item_image;
-        private Image temp_item_image;
         private Category category;
         private SubCategory sub_category;
 
@@ -50,7 +49,6 @@ namespace Prices.Models
         public string User_rank { get => user_rank; set => user_rank = value; }
         public double Distance { get => distance; set => distance = value; }
         public string Barcode { get => barcode; set => barcode = value; }
-        public Image Temp_item_image { get => temp_item_image; set => temp_item_image = value; }
         public Category Category { get => category; set => category = value; }
         public SubCategory Sub_category { get => sub_category; set => sub_category = value; }
 
