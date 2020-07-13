@@ -18,6 +18,7 @@ namespace Prices.Models
         private int user_rankΔ;
         private double lon;
         private double lat;
+        private string field2update;
 
         public string User_id { get => user_id; set => user_id = value; }
         public string First_name { get => first_name; set => first_name = value; }
@@ -31,6 +32,7 @@ namespace Prices.Models
         public double Lon { get => lon; set => lon = value; }
         public double Lat { get => lat; set => lat = value; }
         public Exception Ex { get; set; }
+        public string Field2update { get => field2update; set => field2update = value; }
 
         public void UpdateUserRank(Receipt receipt)
         {

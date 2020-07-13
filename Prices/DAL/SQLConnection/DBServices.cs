@@ -167,7 +167,7 @@ namespace Prices.DAL.SQLConnection
 
         #endregion
 
-        #region Read Items using a DataSet
+        #region Read Items using a DataSet --Not In Use!--
         public DBServices GetItemsDataSet()
         {
             SqlConnection con = null;
@@ -428,7 +428,7 @@ namespace Prices.DAL.SQLConnection
                         Category category = new Category();
                         // Read till the end of the data into a row
                         category.Category_id = (string)dr["category_id"];
-                        category.Category_title = (string)dr["category_title"];                        
+                        category.Category_title = (string)dr["category_title"];
 
                         list.Add(category);
                     }
@@ -530,6 +530,7 @@ namespace Prices.DAL.SQLConnection
                         // Read till the end of the data into a row
                         item.Item_id = (string)dr["item_id"];
                         item.Receipt_id = (string)dr["receipt_id"];
+                        item.Receipt_image = (string)dr["receipt_image"];
                         item.Item_title = (string)dr["item_title"];
                         item.Price = (double)dr["price"];
                         item.Discount_dollar = (double)dr["discount_dollar"];
@@ -694,6 +695,10 @@ namespace Prices.DAL.SQLConnection
                         // Read till the end of the data into a row
                         item.Item_id = (string)dr["item_id"];
                         item.Receipt_id = (string)dr["receipt_id"];
+                        item.Receipt_image = (string)dr["receipt_image"];
+                        item.Receipt_description = (string)dr["receipt_description"];
+                        item.Receipt_discount_dollar = (double)dr["receipts_discount_dollar"];
+                        item.Receipt_discount_percent = (double)dr["receipts_discount_percent"];
                         item.Item_title = (string)dr["item_title"];
                         item.Price = (double)dr["price"];
                         item.Discount_dollar = (double)dr["discount_dollar"];
@@ -844,7 +849,7 @@ namespace Prices.DAL.SQLConnection
 
                 // get a reader
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
-                
+
             }
             catch (Exception ex)
             {
@@ -858,6 +863,67 @@ namespace Prices.DAL.SQLConnection
                     con.Close();
                 }
             }
+        }
+
+        public void SPUpdateUserProfile(User user2Update)
+        {
+            SqlConnection con = null;
+
+            try
+            {
+                con = new DBConnectionBuilder().Connect("DBConnectionString"); //create a connection to the database using the connection String defined in the web config file
+                string spName = "SPUsers";
+
+                Dictionary<string, string> parameters = new Dictionary<string, string> {
+                    { "@StatementType", "UpdateProfile" },
+                    { "@user_id", user2Update.User_id},
+                    { "@field2Update",user2Update.Field2update}
+                };
+                switch (user2Update.Field2update)
+                {
+                    case "name":
+                        parameters.Add("@first_name", user2Update.First_name.ToString());
+                        parameters.Add("@last_name", user2Update.Last_name.ToString());
+                        break;
+                    case "password":
+                        parameters.Add("@password", user2Update.Password.ToString());
+                        break;
+                    case "birthdate":
+                        parameters.Add("@birthdate", user2Update.Birthdate.ToString());
+                      //parameters.Add("@birthdate", user2Update.Birthdate.ToString());
+
+                        break;
+                    case "gender":
+                        parameters.Add("@gender", user2Update.Gender.ToString());
+                        break;
+                    case "state":
+                        parameters.Add("@state", user2Update.State.ToString());
+                        break;
+                    case "city":
+                        parameters.Add("@city", user2Update.City.ToString());
+                        break;
+                    default:
+                        break;
+                }
+                SqlCommand cmd = new DBCommandBuilder().SPCreateCommand(spName, con, parameters);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
         }
         //public void update()
         //{

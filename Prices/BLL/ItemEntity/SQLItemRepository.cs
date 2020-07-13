@@ -50,7 +50,7 @@ namespace Prices.BLL.ItemEntity
             List<Item> filteredResults = new List<Item>();
             List<string> searchTags = new List<string>();
             bool searchForTags = false;
-            if (search.Tags!=null)
+            if (search.Tags != null)
             {
                 if (search.Tags.Length > 0)
                 {
@@ -61,8 +61,6 @@ namespace Prices.BLL.ItemEntity
                     }
                 }
             }
-
-
             for (int i = 0; i < results.Count; i++)
             {
                 results[i].Tags = (List<Tag>)db.SPGetById(new Tag(), "SelectByItemId", results[i].Item_id);//Add tags for each item
@@ -84,13 +82,31 @@ namespace Prices.BLL.ItemEntity
                 }
 
             }
-            //return results;
+            List<string> searchWords = null;
+            search.Title_Words = search.Title_Words ?? "";//turn null into ""
+            //equals to (search.Title_Words = search.Title_Words == null ? "" : search.Title_Words;)
+
+            searchWords = 
+                search.Title_Words.Trim(' ') != ""//check if search title has a real value
+                ? search.Title_Words.Split(' ').ToList()//if this condition is true: searchWords= list of search words
+                : null;//if this condition is true: title words =null;
+
             if (searchForTags)
             {
+                if (searchWords != null)
+                {
+                    //List<Item> filteredResultsWords = filteredResults.Where(item => item.ContainWords(searchWords)).ToList();
+                    return filteredResults.Where(item => item.ContainWords(searchWords)).ToList();
+                }
                 return filteredResults;
             }
             else
             {
+                if (searchWords != null)
+                {
+                    //List<Item> resultsWords = results.Where(item => item.ContainWords(searchWords)).ToList();
+                    return results.Where(item => item.ContainWords(searchWords)).ToList();
+                }
                 return results;
             }
         }

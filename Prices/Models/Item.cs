@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,6 +12,10 @@ namespace Prices.Models
         #region Private fields
         private string item_id;
         private string receipt_id;
+        private string receipt_image;
+        private string receipt_description;
+        private double receipt_discount_dollar;
+        private double receipt_discount_percent;
         private string item_title;
         private double price;
         private double discount_dollar;
@@ -34,6 +39,10 @@ namespace Prices.Models
         #region Properties
         public string Item_id { get => item_id; set => item_id = value; }
         public string Receipt_id { get => receipt_id; set => receipt_id = value; }
+        public string Receipt_image { get => receipt_image; set => receipt_image = value; }
+        public string Receipt_description { get => receipt_description; set => receipt_description = value; }
+        public double Receipt_discount_dollar { get => receipt_discount_dollar; set => receipt_discount_dollar = value; }
+        public double Receipt_discount_percent { get => receipt_discount_percent; set => receipt_discount_percent = value; }
         public string Item_title { get => item_title; set => item_title = value; }
         public double Price { get => price; set => price = value; }
         public double Discount_dollar { get => discount_dollar; set => discount_dollar = value; }
@@ -53,6 +62,54 @@ namespace Prices.Models
         public SubCategory Sub_category { get => sub_category; set => sub_category = value; }
 
         #endregion
+        public bool ContainWords(List<string> words)
+        {
+            bool itemContainsAllWords = false;
+            var props = GetType().GetProperties().ToList();
+            foreach (var prop in props)
+            {
+                object propValue = prop.GetValue(this);
+                switch (propValue)
+                {
+                    case List<Tag> tag:
+                        for (int i = 0; i < tag.Count; i++)
+                        {
+                            if (CheckWords(words, tag[i].Tag_title))
+                            {
+                                return true;
+                            }
+                        }
+                        break;
+                    case Category category:
+                        break;
+                    case SubCategory subCategory:
+                        break;
+                    default:
+                        itemContainsAllWords = CheckWords(words, propValue);
+                        break;
+                }
+                if (itemContainsAllWords)
+                {
+                    return true;
+                }
+            }
 
+
+            return false;
+        }
+        private bool CheckWords(List<string> words, object value)
+        {
+            if (value != null)
+            {
+                for (int i = 0; i < words.Count; i++)
+                {
+                    if (value.ToString().Contains(words[i]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

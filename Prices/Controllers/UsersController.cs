@@ -70,6 +70,12 @@ namespace Prices.Controllers
             repo.SignUp(newUser);
             return repo.Login(newUser.User_id, newUser.Password);
 
+        }[HttpPost]
+        [Route("api/users/UpdateUser")]
+        public string UpdateUser([FromBody]User user2Update)
+        {
+            repo.UpdateUser(user2Update);
+            return user2Update.Password;
         }
     }
 }

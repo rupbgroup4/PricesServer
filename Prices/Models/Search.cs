@@ -9,7 +9,7 @@ namespace Prices.Models
     {
         private User user;
         private T model;
-        private string[] title_Words;
+        private string title_Words;
         private Tag[] tags;
         private int distance_radius;
         private double max_price;
@@ -17,7 +17,7 @@ namespace Prices.Models
         private string statement_Type;
 
         public User User { get => user; set => user = value; }
-        public string[] Title_Words { get => title_Words; set => title_Words = value; }
+        public string Title_Words { get => title_Words; set => title_Words = value; }
         public Tag[] Tags { get => tags; set => tags = value; }
         public int Distance_radius { get => distance_radius; set => distance_radius = value; }
         public double Max_price { get => max_price; set => max_price = value; }

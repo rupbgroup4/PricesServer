@@ -12,7 +12,7 @@ namespace Prices.BLL.Repository_Interfaces
         IEnumerable<User> GetAllUsers();
         User GetUserById(string id);
         User AddUser(User user);
-        User UpdateUser(string id, User user);
+        User UpdateUser(User user2Update);
         bool DeleteUser(User user);
         User Login(string id, string password);
         User SignUp(User newUser);

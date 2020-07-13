@@ -52,10 +52,11 @@ namespace Prices.BLL.UserEntity
             //throw new NotImplementedException();
         }
 
-        public User UpdateUser(string id, User user)
-        {
-            throw new NotImplementedException();
+        public User UpdateUser(User user2Update)
+        {//here
+            db.SPUpdateUserProfile(user2Update);
+            return user2Update;
+            //throw new NotImplementedException();
         }
-
     }
 }
