@@ -516,6 +516,14 @@ namespace Prices.DAL.SQLConnection
                     spName = "SPUsers";
                     parameters.Add("@user_id", id);
                 }
+                else if (type is string)
+                {
+                    if (type.ToString() == "favorites")
+                    {
+                        spName = "SPUsers";
+                        parameters.Add("@user_id", id);
+                    }
+                }
 
                 SqlCommand cmd = new DBCommandBuilder().SPCreateCommand(spName, con, parameters);
 
@@ -531,6 +539,9 @@ namespace Prices.DAL.SQLConnection
                         item.Item_id = (string)dr["item_id"];
                         item.Receipt_id = (string)dr["receipt_id"];
                         item.Receipt_image = (string)dr["receipt_image"];
+                        item.Receipt_description = (string)dr["receipt_description"];
+                        item.Receipt_discount_dollar = (double)dr["receipts_discount_dollar"];
+                        item.Receipt_discount_percent = (double)dr["receipts_discount_percent"];
                         item.Item_title = (string)dr["item_title"];
                         item.Price = (double)dr["price"];
                         item.Discount_dollar = (double)dr["discount_dollar"];
@@ -539,7 +550,7 @@ namespace Prices.DAL.SQLConnection
                         item.User_id = (string)dr["user_id"];
                         item.Item_image = (string)dr["item_image"];
                         item.Id_type = (string)dr["id_type"];
-
+                        item.Store_name = (string)dr["store_name"];
                         list.Add(item);
                     }
                     return list;
@@ -616,6 +627,21 @@ namespace Prices.DAL.SQLConnection
                     }
                     return list;
                 }
+                else if (type is string)
+                {
+                    if (type.ToString() == "favorites")
+                    {
+                        List<string> list = new List<string>();
+                        while (dr.Read())
+                        {
+                            // Read till the end of the data into a row
+                            list.Add((string)dr["item_id"]);
+                        }
+                        return list;
+                    }
+
+                }
+
                 return null;
             }
             catch (Exception ex)
@@ -864,7 +890,7 @@ namespace Prices.DAL.SQLConnection
                 }
             }
         }
-
+        //public void SPUpdate
         public void SPUpdateUserProfile(User user2Update)
         {
             SqlConnection con = null;
@@ -890,8 +916,7 @@ namespace Prices.DAL.SQLConnection
                         break;
                     case "birthdate":
                         parameters.Add("@birthdate", user2Update.Birthdate.ToString());
-                      //parameters.Add("@birthdate", user2Update.Birthdate.ToString());
-
+                        //parameters.Add("@birthdate", user2Update.Birthdate.ToString());
                         break;
                     case "gender":
                         parameters.Add("@gender", user2Update.Gender.ToString());
@@ -901,6 +926,11 @@ namespace Prices.DAL.SQLConnection
                         break;
                     case "city":
                         parameters.Add("@city", user2Update.City.ToString());
+                        break;
+                    case "favorites":
+                        UpdateFavorites(user2Update, out string itemId, out bool addOrRemove);
+                        parameters.Add("@item_id", itemId);
+                        parameters.Add("@add_or_remove", addOrRemove.ToString());
                         break;
                     default:
                         break;
@@ -925,6 +955,16 @@ namespace Prices.DAL.SQLConnection
             }
 
         }
+
+        private void UpdateFavorites(User user2Update, out string itemId, out bool addOrRemove)
+        {
+            List<string> favoritesFromDB = (List<string>)SPGetById("favorites", "selectUserFavorites", user2Update.User_id);
+            addOrRemove = user2Update.Favorites.Count > favoritesFromDB.Count ? true : false;
+            itemId = addOrRemove ?
+                user2Update.Favorites.Except(favoritesFromDB).First() :
+                user2Update.Favorites.Select(i => i).Intersect(favoritesFromDB).First();
+        }
+
         //public void update()
         //{
         //    da.Update(dt);

@@ -70,12 +70,20 @@ namespace Prices.Controllers
             repo.SignUp(newUser);
             return repo.Login(newUser.User_id, newUser.Password);
 
-        }[HttpPost]
+        }
+        [HttpPost]
         [Route("api/users/UpdateUser")]
-        public string UpdateUser([FromBody]User user2Update)
+        public object UpdateUser([FromBody]User user2Update)
         {
             repo.UpdateUser(user2Update);
-            return user2Update.Password;
+            switch (user2Update.Field2update)
+            {
+                case "favorites":
+                    return user2Update.Favorites;
+                case "password":
+                    return user2Update.Password;
+                default: return null;
+            }
         }
     }
 }

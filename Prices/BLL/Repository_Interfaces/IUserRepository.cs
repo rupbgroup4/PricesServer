@@ -16,5 +16,7 @@ namespace Prices.BLL.Repository_Interfaces
         bool DeleteUser(User user);
         User Login(string id, string password);
         User SignUp(User newUser);
+        void UpdateFavorites(User user);
+
     }
 }

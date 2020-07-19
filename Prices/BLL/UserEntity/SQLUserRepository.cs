@@ -39,6 +39,7 @@ namespace Prices.BLL.UserEntity
             List<User> u = db.SPGetById(new User(), "SelectByUserId", id) as List<User>;
             if (u.Count == 1)
             {
+                u[0].Favorites = (List<string>)db.SPGetById("favorites", "selectUserFavorites", u[0].User_id);
                 User user = u[0];
                 return user.Password == password ? user : new User();
             }
@@ -52,11 +53,15 @@ namespace Prices.BLL.UserEntity
             //throw new NotImplementedException();
         }
 
+        public void UpdateFavorites(User user)
+        {
+            db.SPUpdateUserProfile(user);
+        }
+
         public User UpdateUser(User user2Update)
         {//here
             db.SPUpdateUserProfile(user2Update);
             return user2Update;
-            //throw new NotImplementedException();
         }
     }
 }

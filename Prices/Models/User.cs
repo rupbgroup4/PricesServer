@@ -19,6 +19,7 @@ namespace Prices.Models
         private double lon;
         private double lat;
         private string field2update;
+        private List<string> favorites;
 
         public string User_id { get => user_id; set => user_id = value; }
         public string First_name { get => first_name; set => first_name = value; }
@@ -33,6 +34,7 @@ namespace Prices.Models
         public double Lat { get => lat; set => lat = value; }
         public Exception Ex { get; set; }
         public string Field2update { get => field2update; set => field2update = value; }
+        public List<string> Favorites { get => favorites; set => favorites = value; }
 
         public void UpdateUserRank(Receipt receipt)
         {

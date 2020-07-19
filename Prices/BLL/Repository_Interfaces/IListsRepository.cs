@@ -12,5 +12,6 @@ namespace Prices.BLL.Repository_Interfaces
         IEnumerable<Tag> GetAllTags();
         IEnumerable<Category> GetAllCategories();
         IEnumerable<SubCategory> GetAllSubCategories();
+        IEnumerable<Item> GetUserFavoriteItems(User user);
     }
 }

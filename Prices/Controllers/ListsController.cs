@@ -37,6 +37,13 @@ namespace Prices.Controllers
         {
             return repo.GetAllSubCategories();
         }
+        //GET User Favorite Items
+        [HttpPost]
+        [Route("api/lists/GetUserFavoriteItems")]
+        public IEnumerable<Item> GetUserFavoriteItems([FromBody] User user)
+        {
+            return repo.GetUserFavoriteItems(user);
+        }
 
 
         // GET api/<controller>/5

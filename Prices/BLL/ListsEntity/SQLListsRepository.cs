@@ -26,5 +26,19 @@ namespace Prices.BLL.ListsEntity
         {
             return (List<Tag>)db.SPGetAll(new Tag());
         }
+
+        public IEnumerable<Item> GetUserFavoriteItems(User user)
+        {
+            List<Item> favorites = new List<Item>();
+            user.Favorites = (List<string>)db.SPGetById("favorites", "selectUserFavorites", user.User_id);
+ 
+            foreach (string item_id in user.Favorites)
+            {
+                Item item = ((List<Item>)db.SPGetById(new Item(), "SelectByItemId", item_id)).First();
+                item.Tags = (List<Tag>)db.SPGetById(new Tag(), "SelectByItemId", item.Item_id);//Add tags for each item
+                favorites.Add(item);
+            }
+            return favorites;
+        }
     }
 }
