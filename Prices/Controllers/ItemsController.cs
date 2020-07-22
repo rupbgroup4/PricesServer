@@ -24,6 +24,10 @@ namespace Prices.Controllers
         [Route("api/items/GetItemsForSearch")]
         public IEnumerable<Item> GetItemsForSearch([FromBody]Search<Item> search)
         {
+            if (search.OverPriceRange)
+            {
+                search.Max_price = -1;//
+            }
             search.Statement_Type = "select";
             search.Model = new Item();
             return repo.GetResults(search);
