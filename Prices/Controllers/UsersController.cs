@@ -82,7 +82,7 @@ namespace Prices.Controllers
                     return user2Update.Favorites;
                 case "password":
                     return user2Update.Password;
-                default: return null;
+                default: return user2Update.Password;
             }
         }
     }

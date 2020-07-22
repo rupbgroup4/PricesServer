@@ -124,7 +124,7 @@ namespace Prices.DAL.SQLConnection
                 parameters.Add("@first_name", user.First_name);
                 parameters.Add("@last_name", user.Last_name);
                 parameters.Add("@password", user.Password);
-                parameters.Add("@birthdate", user.Birthdate.ToString());
+                parameters.Add("@birthdate", SQLDateFormat(user.Birthdate.ToString()));
                 parameters.Add("@gender", user.Gender.ToString());
                 parameters.Add("@state", user.State);
                 parameters.Add("@city", user.City);
@@ -153,5 +153,14 @@ namespace Prices.DAL.SQLConnection
         }
 
         #endregion
+        private string SQLDateFormat(string date)
+        {
+            date = date.Split(' ')[0];
+            string[] newDate = date.Split('/');
+            string yyyy = newDate[2];
+            string dd = newDate[0];
+            string mm = newDate[1];
+            return $"{yyyy}-{mm}-{dd}";
+        }
     }
 }

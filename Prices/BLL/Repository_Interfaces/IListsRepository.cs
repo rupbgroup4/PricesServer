@@ -13,5 +13,6 @@ namespace Prices.BLL.Repository_Interfaces
         IEnumerable<Category> GetAllCategories();
         IEnumerable<SubCategory> GetAllSubCategories();
         IEnumerable<Item> GetUserFavoriteItems(User user);
+        IEnumerable<Store> GetAllStores();
     }
 }

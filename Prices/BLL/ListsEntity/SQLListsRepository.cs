@@ -17,6 +17,11 @@ namespace Prices.BLL.ListsEntity
             return (List<Category>)db.SPGetAll(new Category());
         }
 
+        public IEnumerable<Store> GetAllStores()
+        {
+            return (List<Store>)db.SPGetAll(new Store());
+        }
+
         public IEnumerable<SubCategory> GetAllSubCategories()
         {
             return (List<SubCategory>)db.SPGetAll(new SubCategory());

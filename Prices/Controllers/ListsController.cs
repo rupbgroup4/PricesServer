@@ -44,7 +44,13 @@ namespace Prices.Controllers
         {
             return repo.GetUserFavoriteItems(user);
         }
-
+        //GET STORES
+        [HttpGet]
+        [Route("api/lists/GetStores")]
+        public IEnumerable<Store> GetStores()
+        {
+            return repo.GetAllStores();
+        }
 
         // GET api/<controller>/5
         public string Get(int id)

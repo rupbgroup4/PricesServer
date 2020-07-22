@@ -915,7 +915,7 @@ namespace Prices.DAL.SQLConnection
                         parameters.Add("@password", user2Update.Password.ToString());
                         break;
                     case "birthdate":
-                        parameters.Add("@birthdate", user2Update.Birthdate.ToString());
+                        parameters.Add("@birthdate", SQLDateFormat(user2Update.Birthdate.ToString()));
                         //parameters.Add("@birthdate", user2Update.Birthdate.ToString());
                         break;
                     case "gender":
@@ -954,6 +954,16 @@ namespace Prices.DAL.SQLConnection
                 }
             }
 
+        }
+
+        private string SQLDateFormat(string date)
+        {
+            date=date.Split(' ')[0];
+            string[] newDate = date.Split('/');
+            string yyyy = newDate[2];
+            string dd = newDate[0];
+            string mm = newDate[1];
+            return $"{yyyy}-{mm}-{dd}";
         }
 
         private void UpdateFavorites(User user2Update, out string itemId, out bool addOrRemove)

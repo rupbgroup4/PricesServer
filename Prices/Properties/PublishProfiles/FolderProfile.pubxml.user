@@ -88,10 +88,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/18/2018 09:44:54</publishTime>
     </File>
     <File Include="bin/Prices.dll">
-      <publishTime>07/13/2020 13:23:36</publishTime>
+      <publishTime>07/22/2020 18:22:19</publishTime>
     </File>
     <File Include="bin/Prices.pdb">
-      <publishTime>07/13/2020 13:23:36</publishTime>
+      <publishTime>07/22/2020 18:22:19</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>05/24/2018 14:38:22</publishTime>
