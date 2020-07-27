@@ -25,12 +25,12 @@ namespace Prices.BLL.ReceiptEntity
             }
             receipt.Receipt_id = Guid.NewGuid().ToString("N");
             receipt.Receipt_image = Image64BaseToURL(receipt.Receipt_image, receipt.Receipt_id);
+            User user = new User();
+            user.UpdateUserRank(receipt);
+            receipt.Receipt_rank = user.User_rank;
+            //db.SPUpdate(user);
             db.InsertToDB(receipt);//insert receipt
             HandleReceiptItems(receipt);
-            User user = new User();
-            user.User_id = receipt.User_id;
-            user.UpdateUserRank(receipt);
-            db.SPUpdate(user);
 
             return receipt;
         }
@@ -57,6 +57,7 @@ namespace Prices.BLL.ReceiptEntity
                     db.InsertToDB(receipt.Items[i].Sub_category);
                 }
                 db.InsertToDB(receipt.Items[i]);
+
                 for (int j = 0; j < receipt.Items[i].Tags.Count; j++)//insert each tag for each item
                 {
                     if (receipt.Items[i].Tags[j].Tag_title != null)//insert new tag to tags_tbl

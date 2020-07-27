@@ -63,7 +63,8 @@ namespace Prices.DAL.SQLConnection
                 //parameters.Add("@StatementType", "Insert");
                 parameters.Add("@receipt_id", rec.Receipt_id);
                 parameters.Add("@user_id", rec.User_id);
-                parameters.Add("@date", rec.Date.ToString());
+                parameters.Add("@receipt_rank", rec.Receipt_rank.ToString());
+                parameters.Add("@date", SQLDateFormat(rec.Date.ToString()));
                 parameters.Add("@discount_dollar", rec.Discount_dollar.ToString());
                 parameters.Add("@discount_percent", rec.Discount_percent.ToString());
                 parameters.Add("@receipt_image", rec.Receipt_image);
@@ -103,7 +104,7 @@ namespace Prices.DAL.SQLConnection
                     spName = "SPItemsTags";
                     //parameters.Add("@StatementType", "Insert");
                     parameters.Add("@item_id", tag.Item_id);
-                    parameters.Add("@tag_id", tag.Tag_id.ToString());
+                    parameters.Add("@tag_id", tag.Tag_id);
 
                 }
             }

@@ -168,39 +168,39 @@ namespace Prices.DAL.SQLConnection
         #endregion
 
         #region Read Items using a DataSet --Not In Use!--
-        public DBServices GetItemsDataSet()
-        {
-            SqlConnection con = null;
-            try
-            {
-                //con = connect("DBConnectionString");
-                con = new DBConnectionBuilder().Connect("DBConnectionString");
-                da = new SqlDataAdapter("SELECT... FROM...", con);
-                SqlCommandBuilder builder = new SqlCommandBuilder(da);
-                DataSet ds = new DataSet();
-                da.Fill(ds);
-                dt = ds.Tables[0];
-            }
+        //public DBServices GetItemsDataSet()
+        //{
+        //    SqlConnection con = null;
+        //    try
+        //    {
+        //        //con = connect("DBConnectionString");
+        //        con = new DBConnectionBuilder().Connect("DBConnectionString");
+        //        da = new SqlDataAdapter("SELECT... FROM...", con);
+        //        SqlCommandBuilder builder = new SqlCommandBuilder(da);
+        //        DataSet ds = new DataSet();
+        //        da.Fill(ds);
+        //        dt = ds.Tables[0];
+        //    }
 
-            catch (Exception ex)
-            {
-                // write errors to log file
-                // try to handle the error
-                throw ex;
-            }
+        //    catch (Exception ex)
+        //    {
+        //        // write errors to log file
+        //        // try to handle the error
+        //        throw ex;
+        //    }
 
-            finally
-            {
-                if (con != null)
-                {
-                    con.Close();
-                }
-            }
+        //    finally
+        //    {
+        //        if (con != null)
+        //        {
+        //            con.Close();
+        //        }
+        //    }
 
 
-            return this;
+        //    return this;
 
-        }
+        //}
 
         #endregion
 
@@ -584,7 +584,8 @@ namespace Prices.DAL.SQLConnection
                         receipt.Discount_dollar = (double)dr["discount_dollar"];
                         receipt.Discount_percent = (double)dr["discount_percent"];
                         receipt.Receipt_image = (string)dr["receipt_image"];
-                        receipt.Store.Store_id = (string)dr["store_id"];
+                        receipt.Receipt_rank = (int)dr["receipt_rank"];
+                        //receipt.Store.Store_id = (string)dr["store_id"];
 
                         list.Add(receipt);
                     }
@@ -671,16 +672,24 @@ namespace Prices.DAL.SQLConnection
 
                 if (search.Model is Item)
                 {
-                    int user_rank = (10 + ((search.User.User_rank - 1000) / 15));//how many results to show
-                    user_rank = user_rank > 10 ? user_rank : 10;
-                    //user_rank >= 1000 ? user_rank= user_rank:user_rank = 1000;
-                    spName = "SPItems";
-                    parameters.Add("@user_lat", search.User.Lat.ToString());
-                    parameters.Add("@user_lon", search.User.Lon.ToString());
-                    parameters.Add("@max_distance", search.Distance_radius.ToString());
-                    parameters.Add("@max_price", search.Max_price.ToString());
-                    parameters.Add("@min_price", search.Min_price.ToString());
-                    parameters.Add("@user_rank", user_rank.ToString());
+                    if (search.Statement_Type == "verifyReceipts")
+                    {
+                        spName = "SPUsers";
+                        parameters.Add("@user_id", search.User.User_id);
+                    }
+                    else
+                    {
+                        int user_rank = (10 + ((search.User.User_rank - 1000) / 15));//how many results to show
+                        user_rank = user_rank > 10 ? user_rank : 10;
+                        //user_rank >= 1000 ? user_rank= user_rank:user_rank = 1000;
+                        spName = "SPItems";
+                        parameters.Add("@user_lat", search.User.Lat.ToString());
+                        parameters.Add("@user_lon", search.User.Lon.ToString());
+                        parameters.Add("@max_distance", search.Distance_radius.ToString());
+                        parameters.Add("@max_price", search.Max_price.ToString());
+                        parameters.Add("@min_price", search.Min_price.ToString());
+                        parameters.Add("@user_rank", user_rank.ToString());
+                    }
                 }
                 #region for later
 
@@ -734,10 +743,13 @@ namespace Prices.DAL.SQLConnection
                         item.Item_image = (string)dr["item_image"];
                         item.Id_type = (string)dr["id_type"];
                         item.Store_name = (string)dr["store_name"];
-                        item.Store_lat = Convert.ToString(dr["lat"]);
-                        item.Store_lon = Convert.ToString(dr["lon"]);
-                        item.Distance = (double)dr["distance"];
-                        item.User_rank = Convert.ToString(dr["user_rank"]);
+                        if (search.Statement_Type != "verifyReceipts")
+                        {
+                            item.Store_lat = Convert.ToString(dr["lat"]);
+                            item.Store_lon = Convert.ToString(dr["lon"]);
+                            item.Distance = (double)dr["distance"];
+                            item.User_rank = Convert.ToString(dr["user_rank"]);
+                        }
                         list.Add(item);
                     }
                     return list;
@@ -827,13 +839,30 @@ namespace Prices.DAL.SQLConnection
                 string spName = "NUN";
 
                 Dictionary<string, string> parameters = new Dictionary<string, string> { { "@StatementType", "Update" } };
-                if (type is User)
+                switch (type)
                 {
-                    User u = type as User;
-                    spName = "SPUsers";
-                    parameters.Add("@user_id", u.User_id);
-                    parameters.Add("@user_rank", u.User_rank.ToString());
+                    case User u:
+                        u = type as User;
+                        spName = "SPUsers";
+                        parameters.Add("@user_id", u.User_id);
+                        parameters.Add("@user_rank", u.User_rank.ToString());
+                        break;
+                    case Receipt r:
+                        r = type as Receipt;
+                        spName = "SPReceipts";
+                        parameters.Add("@receipt_id", r.Receipt_id);
+                        parameters.Add("@to_show", r.Status.ToString());
+                        break;
+                    default:
+                        break;
                 }
+                //if (type is User)
+                //{
+                    //User u = type as User;
+                    //spName = "SPUsers";
+                    //parameters.Add("@user_id", u.User_id);
+                    //parameters.Add("@user_rank", u.User_rank.ToString());
+                //}
                 #region for later
                 //if (type is Item)
                 //{
@@ -859,11 +888,6 @@ namespace Prices.DAL.SQLConnection
                 //    {
                 //        parameters.Add("@tag_id", id);
                 //    }
-                //}
-                //else if (search.Model is Receipt)
-                //{
-                //    spName = "SPReceipts";
-                //    parameters.Add("@receipt_id", id);
                 //}
                 //else if (search.Model is Store)
                 //{
@@ -958,7 +982,7 @@ namespace Prices.DAL.SQLConnection
 
         private string SQLDateFormat(string date)
         {
-            date=date.Split(' ')[0];
+            date = date.Split(' ')[0];
             string[] newDate = date.Split('/');
             string yyyy = newDate[2];
             string dd = newDate[0];

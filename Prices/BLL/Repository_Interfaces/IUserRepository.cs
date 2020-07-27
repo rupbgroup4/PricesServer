@@ -17,6 +17,7 @@ namespace Prices.BLL.Repository_Interfaces
         User Login(string id, string password);
         User SignUp(User newUser);
         void UpdateFavorites(User user);
-
+        IEnumerable<Item> GetReceipts2verify(User user);
+        bool SetReceiptStatus(Receipt receipt);
     }
 }

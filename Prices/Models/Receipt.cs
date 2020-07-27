@@ -18,7 +18,8 @@ namespace Prices.Models
         private string receipt_image;
         private Store store;
         private List<Item> items;
-
+        private bool status;
+        private int receipt_rank;
         #endregion
 
         #region Properties
@@ -31,6 +32,8 @@ namespace Prices.Models
         public List<Item> Items { get => items; set => items = value; }
         public string Receipt_image { get => receipt_image; set => receipt_image = value; }
         public Store Store { get => store; set => store = value; }
+        public bool Status { get => status; set => status = value; }
+        public int Receipt_rank { get => receipt_rank; set => receipt_rank = value; }
         #endregion
 
     }

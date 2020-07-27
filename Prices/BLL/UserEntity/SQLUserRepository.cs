@@ -14,7 +14,7 @@ namespace Prices.BLL.UserEntity
 
         public User AddUser(User user)
         {
-            user.User_rank = 1000;
+            //user.User_rank = 1000;
             throw new NotImplementedException();
         }
 
@@ -26,6 +26,22 @@ namespace Prices.BLL.UserEntity
         public IEnumerable<User> GetAllUsers()
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Item> GetReceipts2verify(User user)
+        {
+            List<Item> results = (List<Item>)db.SPGetResults(new Search<Item>()
+            {
+                Model = new Item(),
+                Statement_Type = "verifyReceipts",
+                User = user,
+            });
+            for (int i = 0; i < results.Count; i++)
+            {
+                results[i].Tags = (List<Tag>)db.SPGetById(new Tag(), "SelectByItemId", results[i].Item_id);//Add tags for each item
+            }
+
+            return results;
         }
 
         public User GetUserById(string id)
@@ -44,6 +60,21 @@ namespace Prices.BLL.UserEntity
                 return user.Password == password ? user : new User();
             }
             return new User();
+        }
+
+        public bool SetReceiptStatus(Receipt receipt)
+        {
+            db.SPUpdate(receipt);
+            Receipt r = ((List<Receipt>)db.SPGetById(new Receipt(), "SelectByReceiptId", receipt.Receipt_id)).FirstOrDefault();
+            if (r != null)
+            {
+                receipt.Receipt_rank = r.Receipt_rank;
+                if (receipt.Status)
+                {
+                    db.SPUpdate(new User() { User_id = receipt.User_id, User_rank = receipt.Receipt_rank });
+                }
+            }
+            return receipt.Status;
         }
 
         public User SignUp(User newUser)

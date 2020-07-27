@@ -36,12 +36,15 @@ namespace Prices.BLL.ListsEntity
         {
             List<Item> favorites = new List<Item>();
             user.Favorites = (List<string>)db.SPGetById("favorites", "selectUserFavorites", user.User_id);
- 
+
             foreach (string item_id in user.Favorites)
             {
-                Item item = ((List<Item>)db.SPGetById(new Item(), "SelectByItemId", item_id)).First();
-                item.Tags = (List<Tag>)db.SPGetById(new Tag(), "SelectByItemId", item.Item_id);//Add tags for each item
-                favorites.Add(item);
+                Item item = ((List<Item>)db.SPGetById(new Item(), "SelectByItemId", item_id)).FirstOrDefault();
+                if (item != null)
+                {
+                    item.Tags = (List<Tag>)db.SPGetById(new Tag(), "SelectByItemId", item.Item_id);//Add tags for each item
+                    favorites.Add(item);
+                }
             }
             return favorites;
         }
