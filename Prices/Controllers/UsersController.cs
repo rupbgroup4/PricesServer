@@ -62,6 +62,7 @@ namespace Prices.Controllers
         {
             return repo.Login(user.User_id, user.Password);
         }
+
         // SIGNUP
         [HttpPost]
         [Route("api/users/SignUp")]
@@ -71,6 +72,7 @@ namespace Prices.Controllers
             return repo.Login(newUser.User_id, newUser.Password);
 
         }
+
         // UPDATE
         [HttpPost]
         [Route("api/users/UpdateUser")]
@@ -86,6 +88,7 @@ namespace Prices.Controllers
                 default: return user2Update.Password;
             }
         }
+
         // GET RECEIPTS TO VERIFY 
         [HttpPost]
         [Route("api/users/GetReceipts2verify")]
@@ -93,6 +96,7 @@ namespace Prices.Controllers
         {
             return repo.GetReceipts2verify(user);
         }
+
         // SET RECEIPTS TO SHOW OR NOT
         //[HttpPost,Route("api/users/SetReceiptStatus/{receipt_id}/{status}")]
         [HttpPost, Route("api/users/SetReceiptStatus")]
@@ -100,6 +104,13 @@ namespace Prices.Controllers
         public bool SetReceiptStatus(Receipt receipt)
         {
             return repo.SetReceiptStatus(receipt);
+        }
+
+        // SET Forgot Password
+        [HttpPost, Route("api/users/ForgotPassword")]
+        public bool ForgotPassword([FromBody]string userId)
+        {
+            return repo.ForgotPassword(userId);
         }
     }
 }

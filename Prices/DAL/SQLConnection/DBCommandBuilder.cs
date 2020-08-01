@@ -80,6 +80,7 @@ namespace Prices.DAL.SQLConnection
                 parameters.Add("@receipt_id", item.Receipt_id);
                 parameters.Add("@item_title", item.Item_title);
                 parameters.Add("@price", item.Price.ToString());
+                parameters.Add("@barcode", item.Barcode.ToString());
                 parameters.Add("@discount_dollar", item.Discount_dollar.ToString());
                 parameters.Add("@discount_percent", item.Discount_percent.ToString());
                 parameters.Add("@item_description", item.Item_Description.ToString());

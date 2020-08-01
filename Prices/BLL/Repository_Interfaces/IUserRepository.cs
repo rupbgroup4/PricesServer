@@ -19,5 +19,6 @@ namespace Prices.BLL.Repository_Interfaces
         void UpdateFavorites(User user);
         IEnumerable<Item> GetReceipts2verify(User user);
         bool SetReceiptStatus(Receipt receipt);
+        bool ForgotPassword(string userId);
     }
 }

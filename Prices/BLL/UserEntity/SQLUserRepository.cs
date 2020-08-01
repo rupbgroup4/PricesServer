@@ -4,13 +4,17 @@ using Prices.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
+using System.Web.Configuration;
 
 namespace Prices.BLL.UserEntity
 {
     public class SQLUserRepository : IUserRepository
     {
         DBServices db = new DBServices();
+        readonly string logoURL = "http://proj.ruppin.ac.il/bgroup4/prod/server/UploadedFiles/PricesLogo.png";
 
         public User AddUser(User user)
         {
@@ -23,6 +27,72 @@ namespace Prices.BLL.UserEntity
             throw new NotImplementedException();
         }
 
+        public bool ForgotPassword(string userId)
+        {
+            User user = ((List<User>)db.SPGetById(new User(), "SelectByUserId", userId)).FirstOrDefault();
+            if (user != null)
+            {
+                user.Password = Guid.NewGuid().ToString("N").Substring(0, 8);
+                user.Field2update = "password";
+                db.SPUpdateUserProfile(user);
+                //string s = user.Gender ? "Mr." : "Mrs.";
+                string title = "\"Prices\" Reset Password";
+                //string image = $"<img src='{logoURL}' alt='logo' height='150' block;='' margin-left:='' auto;='' margin-right:= '' style=''/>";
+                string s = $@"
+                <div style='text-align: center; background-color: #282c34;'>
+                    <h2 style='color: #fcaf17;'> 
+                        Dear {(user.Gender ? "Mr." : "Mrs.")} {user.First_name}
+                    </h2>
+                        <p style='color: #fcaf17;'>
+                            We received a request to reset your Prices password.
+                        </p>
+                    <p style='color: #fcaf17;'>
+                        Here is your new password:     
+                    </p>
+                    <p style ='color: red;'> 
+                        {user.Password}
+                    </p>   
+                    <a href='http://proj.ruppin.ac.il/bgroup4/prod/client/'>
+                        Prices
+                    </a>
+                </div>";
+                SendMail(userId, title, s);
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
+        }
+        private void SendMail(string toAddress, string mailTitle, string mailBody)
+        {
+            string password = WebConfigurationManager.AppSettings["EmailPassword"];
+            var smtp = new SmtpClient
+            {
+                Host = "Smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("rupbgroup4@gmail.com", password)
+            };
+
+            using (var mailMessage = new MailMessage("rupbgroup4@gmail.com", toAddress)
+            {
+                IsBodyHtml = true,
+                Subject = mailTitle,
+                Body = mailBody,
+            })
+                try
+                {
+                    smtp.Send(mailMessage);
+                }
+                catch (Exception exp)
+                {
+                    throw new Exception($"something went wrong in sendMail method: \n {exp.Message}");
+                }
+        }
         public IEnumerable<User> GetAllUsers()
         {
             throw new NotImplementedException();

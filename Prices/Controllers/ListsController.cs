@@ -19,6 +19,13 @@ namespace Prices.Controllers
         {
             return new string[] { "value1", "value2" };
         }
+
+        //GET UsersEmail
+        [Route("api/lists/GetAllUsersEmails")]
+        public IEnumerable<string> GetAllUsersEmails()
+        {
+            return repo.GetAllUsersEmails();
+        }
         //GET TAGS
         [Route("api/lists/GetTags")]
         public IEnumerable<Tag> GetTags()

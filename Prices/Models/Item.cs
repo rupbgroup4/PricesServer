@@ -103,7 +103,7 @@ namespace Prices.Models
             {
                 for (int i = 0; i < words.Count; i++)
                 {
-                    if (value.ToString().Contains(words[i]))
+                    if (value.ToString().ToLower().Contains(words[i].ToLower()))
                     {
                         return true;
                     }

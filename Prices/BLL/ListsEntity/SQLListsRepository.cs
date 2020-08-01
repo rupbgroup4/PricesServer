@@ -32,6 +32,11 @@ namespace Prices.BLL.ListsEntity
             return (List<Tag>)db.SPGetAll(new Tag());
         }
 
+        public IEnumerable<string> GetAllUsersEmails()
+        {
+            return (List<string>)db.SPGetAll("UsersEmails");
+        }
+
         public IEnumerable<Item> GetUserFavoriteItems(User user)
         {
             List<Item> favorites = new List<Item>();

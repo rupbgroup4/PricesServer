@@ -205,6 +205,7 @@ namespace Prices.DAL.SQLConnection
         #endregion
 
         #region Get items using data reader
+
         //public List<Item> GetAllItems()
         //{
         //    List<Item> itemsList = new List<Item>();
@@ -314,31 +315,63 @@ namespace Prices.DAL.SQLConnection
             {
                 con = new DBConnectionBuilder().Connect("DBConnectionString"); //create a connection to the database using the connection String defined in the web config file
                 string spName = "NUN";
+                switch (type)
+                {
+                    case Receipt r:
+                        spName = "SPReceipts";
+                        break;
+                    case Tag t:
+                        spName = "SPTags";
+                        break;
+                    case Store s:
+                        spName = "SPStores";
+                        break;
+                    case Category c:
+                        spName = "SPCategory";
+                        break;
+                    case SubCategory sc:
+                        spName = "SPSubCategory";
+                        break;
+                    case string s:
+                        switch (s)
+                        {
+                            case "UsersEmails":
+                                spName = "SPUsers";
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                #region ifs
+
                 //if (type is Item)
                 //{
                 //    spName = "SPItems";
                 //}
-                //else 
-                if (type is Receipt)
-                {
-                    spName = "SPReceipts";
-                }
-                else if (type is Tag)
-                {
-                    spName = "SPTags";
-                }
-                else if (type is Store)
-                {
-                    spName = "SPStores";
-                }
-                else if (type is Category)
-                {
-                    spName = "SPCategory";
-                }
-                else if (type is SubCategory)
-                {
-                    spName = "SPSubCategory";
-                }
+                //else if (type is Receipt)
+                //{
+                //    spName = "SPReceipts";
+                //}
+                //else if (type is Tag)
+                //{
+                //    spName = "SPTags";
+                //}
+                //else if (type is Store)
+                //{
+                //    spName = "SPStores";
+                //}
+                //else if (type is Category)
+                //{
+                //    spName = "SPCategory";
+                //}
+                //else if (type is SubCategory)
+                //{
+                //    spName = "SPSubCategory";
+                //}
+                #endregion
 
                 Dictionary<string, string> parameters = new Dictionary<string, string> { { "@StatementType", "select" } };
                 SqlCommand cmd = new DBCommandBuilder().SPCreateCommand(spName, con, parameters);
@@ -369,87 +402,182 @@ namespace Prices.DAL.SQLConnection
                 //    return list;
                 //}
                 //else 
-                if (type is Receipt)
+                #region ifs
+
+                //if (type is Receipt)
+                //{
+
+                //    List<Receipt> list = new List<Receipt>();
+                //    while (dr.Read())
+                //    {
+                //        Receipt receipt = new Receipt();
+                //        // Read till the end of the data into a row
+                //        receipt.Receipt_id = (string)dr["receipt_id"];
+                //        receipt.User_id = (string)dr["user_id"];
+                //        receipt.Date = (DateTime)dr["date"];
+                //        receipt.Receipt_Description = (string)dr["receipt_description"];
+                //        receipt.Discount_dollar = (double)dr["discount_dollar"];
+                //        receipt.Discount_percent = (double)dr["discount_percent"];
+                //        receipt.Receipt_image = (string)dr["receipt_image"];
+                //        receipt.Store.Store_id = (string)dr["store_id"];
+
+                //        list.Add(receipt);
+                //    }
+                //    return list;
+                //}
+                //else if (type is Tag)
+                //{
+                //    List<Tag> list = new List<Tag>();
+                //    while (dr.Read())
+                //    {
+                //        Tag tag = new Tag();
+                //        // Read till the end of the data into a row
+                //        tag.Tag_id = (string)dr["tag_id"];
+                //        tag.Tag_title = (string)dr["tag_title"];
+
+                //        list.Add(tag);
+                //    }
+                //    return list;
+                //}
+                //else if (type is Store)
+                //{
+                //    List<Store> list = new List<Store>();
+                //    while (dr.Read())
+                //    {
+                //        Store store = new Store();
+                //        // Read till the end of the data into a row
+                //        store.Store_id = (string)dr["store_id"];
+                //        store.Store_name = (string)dr["store_name"];
+                //        store.Lat = (double)dr["lat"];
+                //        store.Lon = (double)dr["lon"];
+
+                //        list.Add(store);
+                //    }
+                //    return list;
+                //}
+                //else if (type is Category)
+                //{
+                //    List<Category> list = new List<Category>();
+                //    while (dr.Read())
+                //    {
+                //        Category category = new Category();
+                //        // Read till the end of the data into a row
+                //        category.Category_id = (string)dr["category_id"];
+                //        category.Category_title = (string)dr["category_title"];
+
+                //        list.Add(category);
+                //    }
+                //    return list;
+                //}
+                //else if (type is SubCategory)
+                //{
+                //    List<SubCategory> list = new List<SubCategory>();
+                //    while (dr.Read())
+                //    {
+                //        SubCategory subCategory = new SubCategory();
+                //        // Read till the end of the data into a row
+                //        subCategory.Sub_category_id = (string)dr["sub_category_id"];
+                //        subCategory.Sub_category_title = (string)dr["sub_category_title"];
+
+                //        list.Add(subCategory);
+                //    }
+                //    return list;
+                //}
+                #endregion
+
+                IList listI;
+                switch (type)
                 {
+                    case Receipt r:
+                        listI = new List<Receipt>();
+                        //List<Receipt> listR = new List<Receipt>();
+                        while (dr.Read())
+                        {
+                            Receipt receipt = new Receipt();
+                            // Read till the end of the data into a row
+                            receipt.Receipt_id = (string)dr["receipt_id"];
+                            receipt.User_id = (string)dr["user_id"];
+                            receipt.Date = (DateTime)dr["date"];
+                            receipt.Receipt_Description = (string)dr["receipt_description"];
+                            receipt.Discount_dollar = (double)dr["discount_dollar"];
+                            receipt.Discount_percent = (double)dr["discount_percent"];
+                            receipt.Receipt_image = (string)dr["receipt_image"];
+                            receipt.Store.Store_id = (string)dr["store_id"];
 
-                    List<Receipt> list = new List<Receipt>();
-                    while (dr.Read())
-                    {
-                        Receipt receipt = new Receipt();
-                        // Read till the end of the data into a row
-                        receipt.Receipt_id = (string)dr["receipt_id"];
-                        receipt.User_id = (string)dr["user_id"];
-                        receipt.Date = (DateTime)dr["date"];
-                        receipt.Receipt_Description = (string)dr["receipt_description"];
-                        receipt.Discount_dollar = (double)dr["discount_dollar"];
-                        receipt.Discount_percent = (double)dr["discount_percent"];
-                        receipt.Receipt_image = (string)dr["receipt_image"];
-                        receipt.Store.Store_id = (string)dr["store_id"];
+                            listI.Add(receipt);
+                        }
+                        //return listR;
+                        break;
+                    case Tag t:
+                        listI = new List<Tag>();
+                        //List<Tag> listT = new List<Tag>();
+                        while (dr.Read())
+                        {
+                            Tag tag = new Tag();
+                            // Read till the end of the data into a row
+                            tag.Tag_id = (string)dr["tag_id"];
+                            tag.Tag_title = (string)dr["tag_title"];
 
-                        list.Add(receipt);
-                    }
-                    return list;
+                            listI.Add(tag);
+                        }
+                        //return listT;
+                        break;
+                    case Store s:
+                        listI = new List<Store>();
+                        //List<Store> listS = new List<Store>();
+                        while (dr.Read())
+                        {
+                            Store store = new Store();
+                            // Read till the end of the data into a row
+                            store.Store_id = (string)dr["store_id"];
+                            store.Store_name = (string)dr["store_name"];
+                            store.Lat = (double)dr["lat"];
+                            store.Lon = (double)dr["lon"];
+
+                            listI.Add(store);
+                        }
+                        //return listS;
+                        break;
+                    case Category c:
+                        listI = new List<Category>();
+                        //List<Category> listC = new List<Category>();
+                        while (dr.Read())
+                        {
+                            Category category = new Category();
+                            // Read till the end of the data into a row
+                            category.Category_id = (string)dr["category_id"];
+                            category.Category_title = (string)dr["category_title"];
+
+                            listI.Add(category);
+                        }
+                        //return listC;
+                        break;
+                    case SubCategory sc:
+                        listI = new List<SubCategory>();
+                        //List<SubCategory> list = new List<SubCategory>();
+                        while (dr.Read())
+                        {
+                            SubCategory subCategory = new SubCategory();
+                            // Read till the end of the data into a row
+                            subCategory.Sub_category_id = (string)dr["sub_category_id"];
+                            subCategory.Sub_category_title = (string)dr["sub_category_title"];
+
+                            listI.Add(subCategory);
+                        }
+                        //return list;
+                        break;
+                    case string s:
+                        listI = new List<string>();
+                        while (dr.Read())
+                        {
+                            listI.Add((string)dr["user_id"]);
+                        }
+                        break;
+                    default:
+                        listI = null;
+                        break;
                 }
-                else if (type is Tag)
-                {
-                    List<Tag> list = new List<Tag>();
-                    while (dr.Read())
-                    {
-                        Tag tag = new Tag();
-                        // Read till the end of the data into a row
-                        tag.Tag_id = (string)dr["tag_id"];
-                        tag.Tag_title = (string)dr["tag_title"];
-
-                        list.Add(tag);
-                    }
-                    return list;
-                }
-                else if (type is Store)
-                {
-                    List<Store> list = new List<Store>();
-                    while (dr.Read())
-                    {
-                        Store store = new Store();
-                        // Read till the end of the data into a row
-                        store.Store_id = (string)dr["store_id"];
-                        store.Store_name = (string)dr["store_name"];
-                        store.Lat = (double)dr["lat"];
-                        store.Lon = (double)dr["lon"];
-
-                        list.Add(store);
-                    }
-                    return list;
-                }
-                else if (type is Category)
-                {
-                    List<Category> list = new List<Category>();
-                    while (dr.Read())
-                    {
-                        Category category = new Category();
-                        // Read till the end of the data into a row
-                        category.Category_id = (string)dr["category_id"];
-                        category.Category_title = (string)dr["category_title"];
-
-                        list.Add(category);
-                    }
-                    return list;
-                }
-                else if (type is SubCategory)
-                {
-                    List<SubCategory> list = new List<SubCategory>();
-                    while (dr.Read())
-                    {
-                        SubCategory subCategory = new SubCategory();
-                        // Read till the end of the data into a row
-                        subCategory.Sub_category_id = (string)dr["sub_category_id"];
-                        subCategory.Sub_category_title = (string)dr["sub_category_title"];
-
-                        list.Add(subCategory);
-                    }
-                    return list;
-                }
-
-                return null;
+                return listI;
             }
             catch (Exception ex)
             {
@@ -465,15 +593,6 @@ namespace Prices.DAL.SQLConnection
             }
         }
 
-        //SPGetItemById() { 
-
-
-        //}
-
-        //SPGetStoreById() {
-
-        //}
-
         public IList SPGetById<T>(T type, string selectType, string id)
         {
             //IList<T> list;
@@ -484,46 +603,92 @@ namespace Prices.DAL.SQLConnection
                 con = new DBConnectionBuilder().Connect("DBConnectionString"); //create a connection to the database using the connection String defined in the web config file
                 string spName = "NUN";
                 Dictionary<string, string> parameters = new Dictionary<string, string> { { "@StatementType", selectType } };
-                if (type is Item)
+                switch (type)
                 {
-                    spName = "SPItems";
-                    parameters.Add("@item_id", id);
-                }
-                else if (type is Tag)
-                {
-                    spName = "SPItemsTags";
-                    if (selectType == "SelectByItemId")
-                    {
+                    case Item i:
+                        spName = "SPItems";
                         parameters.Add("@item_id", id);
-                    }
-                    else if (selectType == "SelectByTagId")
-                    {
-                        parameters.Add("@tag_id", id);
-                    }
-                }
-                else if (type is Receipt)
-                {
-                    spName = "SPReceipts";
-                    parameters.Add("@receipt_id", id);
-                }
-                else if (type is Store)
-                {
-                    spName = "SPStores";
-                    parameters.Add("@store_id", id);
-                }
-                else if (type is User)
-                {
-                    spName = "SPUsers";
-                    parameters.Add("@user_id", id);
-                }
-                else if (type is string)
-                {
-                    if (type.ToString() == "favorites")
-                    {
+                        break;
+                    case Tag t:
+                        spName = "SPItemsTags";
+                        if (selectType == "SelectByItemId")
+                        {
+                            parameters.Add("@item_id", id);
+                        }
+                        else if (selectType == "SelectByTagId")
+                        {
+                            parameters.Add("@tag_id", id);
+                        }
+                        break;
+                    case Receipt r:
+                        spName = "SPReceipts";
+                        parameters.Add("@receipt_id", id);
+                        break;
+                    case Store s:
+                        spName = "SPStores";
+                        parameters.Add("@store_id", id);
+                        break;
+                    case User u:
                         spName = "SPUsers";
                         parameters.Add("@user_id", id);
-                    }
+                        break;
+                    case string s:
+                        switch (s.ToString())
+                        {
+                            case "favorites":
+                                spName = "SPUsers";
+                                parameters.Add("@user_id", id);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
                 }
+                #region ifs
+
+                //if (type is Item)
+                //{
+                //    spName = "SPItems";
+                //    parameters.Add("@item_id", id);
+                //}
+                //else if (type is Tag)
+                //{
+                //    spName = "SPItemsTags";
+                //    if (selectType == "SelectByItemId")
+                //    {
+                //        parameters.Add("@item_id", id);
+                //    }
+                //    else if (selectType == "SelectByTagId")
+                //    {
+                //        parameters.Add("@tag_id", id);
+                //    }
+                //}
+                //else if (type is Receipt)
+                //{
+                //    spName = "SPReceipts";
+                //    parameters.Add("@receipt_id", id);
+                //}
+                //else if (type is Store)
+                //{
+                //    spName = "SPStores";
+                //    parameters.Add("@store_id", id);
+                //}
+                //else if (type is User)
+                //{
+                //    spName = "SPUsers";
+                //    parameters.Add("@user_id", id);
+                //}
+                //else if (type is string)
+                //{
+                //    if (type.ToString() == "favorites")
+                //    {
+                //        spName = "SPUsers";
+                //        parameters.Add("@user_id", id);
+                //    }
+                //}
+                #endregion
 
                 SqlCommand cmd = new DBCommandBuilder().SPCreateCommand(spName, con, parameters);
 
@@ -539,6 +704,7 @@ namespace Prices.DAL.SQLConnection
                         item.Item_id = (string)dr["item_id"];
                         item.Receipt_id = (string)dr["receipt_id"];
                         item.Receipt_image = (string)dr["receipt_image"];
+                        item.Barcode = dr["barcode"].ToString();
                         item.Receipt_description = (string)dr["receipt_description"];
                         item.Receipt_discount_dollar = (double)dr["receipts_discount_dollar"];
                         item.Receipt_discount_percent = (double)dr["receipts_discount_percent"];
@@ -622,7 +788,7 @@ namespace Prices.DAL.SQLConnection
                         user.Birthdate = (DateTime)dr["birthdate"];
                         user.Gender = (bool)dr["gender"];
                         user.State = (string)dr["state"];
-                        user.City = (string)dr["city"];
+                        user.City = dr["city"].ToString();
                         user.User_rank = (int)dr["user_rank"];
                         list.Add(user);
                     }
@@ -731,6 +897,7 @@ namespace Prices.DAL.SQLConnection
                         item.Item_id = (string)dr["item_id"];
                         item.Receipt_id = (string)dr["receipt_id"];
                         item.Receipt_image = (string)dr["receipt_image"];
+                        item.Barcode = dr["barcode"].ToString();
                         item.Receipt_description = (string)dr["receipt_description"];
                         item.Receipt_discount_dollar = (double)dr["receipts_discount_dollar"];
                         item.Receipt_discount_percent = (double)dr["receipts_discount_percent"];
@@ -858,10 +1025,10 @@ namespace Prices.DAL.SQLConnection
                 }
                 //if (type is User)
                 //{
-                    //User u = type as User;
-                    //spName = "SPUsers";
-                    //parameters.Add("@user_id", u.User_id);
-                    //parameters.Add("@user_rank", u.User_rank.ToString());
+                //User u = type as User;
+                //spName = "SPUsers";
+                //parameters.Add("@user_id", u.User_id);
+                //parameters.Add("@user_rank", u.User_rank.ToString());
                 //}
                 #region for later
                 //if (type is Item)
