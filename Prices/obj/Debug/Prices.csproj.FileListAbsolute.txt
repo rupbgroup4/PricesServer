@@ -182,3 +182,4 @@ C:\Users\ometz\OneDrive\מסמכים\GitHub\PricesServer\Prices\obj\Debug\Prices
 C:\Users\ometz\OneDrive\מסמכים\GitHub\PricesServer\Prices\obj\Debug\Prices.csproj.CopyComplete
 C:\Users\ometz\OneDrive\מסמכים\GitHub\PricesServer\Prices\obj\Debug\Prices.dll
 C:\Users\ometz\OneDrive\מסמכים\GitHub\PricesServer\Prices\obj\Debug\Prices.pdb
+C:\Users\ometz\OneDrive\מסמכים\GitHub\PricesServer\Prices\bin\System.Threading.Tasks.Extensions.dll

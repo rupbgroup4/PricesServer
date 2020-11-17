@@ -46,6 +46,11 @@ namespace Prices.BLL.ReceiptEntity
                 }
                 receipt.Items[i].Receipt_id = receipt.Receipt_id;
                 receipt.Items[i].User_id = receipt.User_id;
+                Category c = ((List<Category>)db.SPGetById(new Category(), "SelectByTitle", receipt.Items[i].Category.Category_title)).FirstOrDefault();
+                if (c!=null)
+                {
+
+                }
                 if (receipt.Items[i].Category.Category_title != null)
                 {
                     receipt.Items[i].Category.Category_id = Guid.NewGuid().ToString("N");

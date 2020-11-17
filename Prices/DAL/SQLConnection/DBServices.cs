@@ -632,6 +632,10 @@ namespace Prices.DAL.SQLConnection
                         spName = "SPUsers";
                         parameters.Add("@user_id", id);
                         break;
+                    case Category c:
+                        spName = "SPCategory";
+                        parameters.Add("@title", id);
+                        break;
                     case string s:
                         switch (s.ToString())
                         {
@@ -694,120 +698,63 @@ namespace Prices.DAL.SQLConnection
 
                 // get a reader
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
-                if (type is Item)
+                switch (type)
                 {
-                    Item item = type as Item;
-                    List<Item> list = new List<Item>();
-                    while (dr.Read())
-                    {
-                        // Read till the end of the data into a row
-                        item.Item_id = (string)dr["item_id"];
-                        item.Receipt_id = (string)dr["receipt_id"];
-                        item.Receipt_image = (string)dr["receipt_image"];
-                        item.Barcode = dr["barcode"].ToString();
-                        item.Receipt_description = (string)dr["receipt_description"];
-                        item.Receipt_discount_dollar = (double)dr["receipts_discount_dollar"];
-                        item.Receipt_discount_percent = (double)dr["receipts_discount_percent"];
-                        item.Item_title = (string)dr["item_title"];
-                        item.Price = (double)dr["price"];
-                        item.Discount_dollar = (double)dr["discount_dollar"];
-                        item.Discount_percent = (double)dr["discount_percent"];
-                        item.Item_Description = (string)dr["item_description"];
-                        item.User_id = (string)dr["user_id"];
-                        item.Item_image = (string)dr["item_image"];
-                        item.Id_type = (string)dr["id_type"];
-                        item.Store_name = (string)dr["store_name"];
-                        list.Add(item);
-                    }
-                    return list;
-                }
-                else if (type is Tag)
-                {
-
-                    List<Tag> list = new List<Tag>();
-                    while (dr.Read())
-                    {
-                        Tag tag = new Tag();
-                        // Read till the end of the data into a row
-                        tag.Tag_id = (string)dr["tag_id"];
-                        tag.Tag_title = (string)dr["tag_title"];
-                        list.Add(tag);
-                    }
-                    return list;
-                }
-                else if (type is Receipt)
-                {
-
-                    List<Receipt> list = new List<Receipt>();
-                    while (dr.Read())
-                    {
-                        Receipt receipt = new Receipt();
-                        // Read till the end of the data into a row
-                        receipt.Receipt_id = (string)dr["receipt_id"];
-                        receipt.User_id = (string)dr["user_id"];
-                        receipt.Date = (DateTime)dr["date"];
-                        receipt.Receipt_Description = (string)dr["receipt_description"];
-                        receipt.Discount_dollar = (double)dr["discount_dollar"];
-                        receipt.Discount_percent = (double)dr["discount_percent"];
-                        receipt.Receipt_image = (string)dr["receipt_image"];
-                        receipt.Receipt_rank = (int)dr["receipt_rank"];
-                        //receipt.Store.Store_id = (string)dr["store_id"];
-
-                        list.Add(receipt);
-                    }
-                    return list;
-                }
-                else if (type is Store)
-                {
-
-                    List<Store> list = new List<Store>();
-                    while (dr.Read())
-                    {
-                        Store store = new Store();
-                        // Read till the end of the data into a row
-                        store.Store_id = (string)dr["store_id"];
-                        store.Store_name = (string)dr["store_name"];
-                        store.Lat = (double)dr["lat"];
-                        store.Lon = (double)dr["lon"];
-                        list.Add(store);
-                    }
-                    return list;
-                }
-                else if (type is User)
-                {
-
-                    List<User> list = new List<User>();
-                    while (dr.Read())
-                    {
-                        User user = new User();
-                        // Read till the end of the data into a row
-                        user.User_id = (string)dr["user_id"];
-                        user.First_name = (string)dr["first_name"];
-                        user.Last_name = (string)dr["last_name"];
-                        user.Password = (string)dr["password"];
-                        user.Birthdate = (DateTime)dr["birthdate"];
-                        user.Gender = (bool)dr["gender"];
-                        user.State = (string)dr["state"];
-                        user.City = dr["city"].ToString();
-                        user.User_rank = (int)dr["user_rank"];
-                        list.Add(user);
-                    }
-                    return list;
-                }
-                else if (type is string)
-                {
-                    if (type.ToString() == "favorites")
-                    {
-                        List<string> list = new List<string>();
-                        while (dr.Read())
+                    case Item i:
+                        return ReadItems(type, dr);
+                    case Tag t:
+                        return ReadTags(dr);
+                    case Receipt r:
+                        return ReadReceipts(dr);
+                    case Store s:
+                        return ReadStores(dr);
+                    case User u:
+                        return ReadUsers(dr);
+                    case Category c:
+                        return ReadCategories(dr);
+                    case string s:
+                        if (type.ToString() == "favorites")
                         {
-                            // Read till the end of the data into a row
-                            list.Add((string)dr["item_id"]);
+                            return ReadFavorites(dr);
                         }
-                        return list;
-                    }
-
+                        else
+                        {
+                            break;
+                        }
+                    default:
+                        break;
                 }
+                #region ifs
+
+                //if (type is Item)
+                //{
+                //    return ReadItems(type, dr);
+                //}
+                //else if (type is Tag)
+                //{
+                //    return ReadTags(dr);
+                //}
+                //else if (type is Receipt)
+                //{
+                //    return ReadReceipts(dr);
+                //}
+                //else if (type is Store)
+                //{
+                //    return ReadStores(dr);
+                //}
+                //else if (type is User)
+                //{
+                //    return ReadUsers(dr);
+                //}
+                //else if (type is string)
+                //{
+                //    if (type.ToString() == "favorites")
+                //    {
+                //        return ReadFavorites(dr);
+                //    }
+
+                //}
+                #endregion
 
                 return null;
             }
@@ -824,6 +771,133 @@ namespace Prices.DAL.SQLConnection
                 }
             }
         }
+
+        private static IList ReadCategories(SqlDataReader dr)
+        {
+            List<Category> list = new List<Category>();
+            while (dr.Read())
+            {
+                Category c = new Category();
+                c.Category_id = dr["category_id"].ToString();
+                c.Category_title = dr["category_title"].ToString();
+                // Read till the end of the data into a row
+                list.Add(c);
+            }
+            return list;
+        }
+
+        private static IList ReadFavorites(SqlDataReader dr)
+        {
+            List<string> list = new List<string>();
+            while (dr.Read())
+            {
+                // Read till the end of the data into a row
+                list.Add((string)dr["item_id"]);
+            }
+            return list;
+        }
+
+        private static IList ReadUsers(SqlDataReader dr)
+        {
+            List<User> list = new List<User>();
+            while (dr.Read())
+            {
+                User user = new User();
+                // Read till the end of the data into a row
+                user.User_id = (string)dr["user_id"];
+                user.First_name = (string)dr["first_name"];
+                user.Last_name = (string)dr["last_name"];
+                user.Password = (string)dr["password"];
+                user.Birthdate = (DateTime)dr["birthdate"];
+                user.Gender = (bool)dr["gender"];
+                user.State = (string)dr["state"];
+                user.City = dr["city"].ToString();
+                user.User_rank = (int)dr["user_rank"];
+                list.Add(user);
+            }
+            return list;
+        }
+
+        private static IList ReadStores(SqlDataReader dr)
+        {
+            List<Store> list = new List<Store>();
+            while (dr.Read())
+            {
+                Store store = new Store();
+                // Read till the end of the data into a row
+                store.Store_id = (string)dr["store_id"];
+                store.Store_name = (string)dr["store_name"];
+                store.Lat = (double)dr["lat"];
+                store.Lon = (double)dr["lon"];
+                list.Add(store);
+            }
+            return list;
+        }
+
+        private static IList ReadReceipts(SqlDataReader dr)
+        {
+            List<Receipt> list = new List<Receipt>();
+            while (dr.Read())
+            {
+                Receipt receipt = new Receipt();
+                // Read till the end of the data into a row
+                receipt.Receipt_id = (string)dr["receipt_id"];
+                receipt.User_id = (string)dr["user_id"];
+                receipt.Date = (DateTime)dr["date"];
+                receipt.Receipt_Description = (string)dr["receipt_description"];
+                receipt.Discount_dollar = (double)dr["discount_dollar"];
+                receipt.Discount_percent = (double)dr["discount_percent"];
+                receipt.Receipt_image = (string)dr["receipt_image"];
+                receipt.Receipt_rank = (int)dr["receipt_rank"];
+                //receipt.Store.Store_id = (string)dr["store_id"];
+                
+                list.Add(receipt);
+            }
+            return list;
+        }
+
+        private static IList ReadItems<T>(T type, SqlDataReader dr)
+        {
+            Item item = type as Item;
+            List<Item> list = new List<Item>();
+            while (dr.Read())
+            {
+                // Read till the end of the data into a row
+                item.Item_id = (string)dr["item_id"];
+                item.Receipt_id = (string)dr["receipt_id"];
+                item.Receipt_image = (string)dr["receipt_image"];
+                item.Barcode = dr["barcode"].ToString();
+                item.Receipt_description = (string)dr["receipt_description"];
+                item.Receipt_discount_dollar = (double)dr["receipts_discount_dollar"];
+                item.Receipt_discount_percent = (double)dr["receipts_discount_percent"];
+                item.Item_title = (string)dr["item_title"];
+                item.Price = (double)dr["price"];
+                item.Discount_dollar = (double)dr["discount_dollar"];
+                item.Discount_percent = (double)dr["discount_percent"];
+                item.Item_Description = (string)dr["item_description"];
+                item.User_id = (string)dr["user_id"];
+                item.Item_image = (string)dr["item_image"];
+                item.Id_type = (string)dr["id_type"];
+                item.Store_name = (string)dr["store_name"];
+                list.Add(item);
+            }
+            return list;
+        }
+
+        private static IList ReadTags(SqlDataReader dr)
+        {
+            List<Tag> list = new List<Tag>();
+            while (dr.Read())
+            {
+                Tag tag = new Tag();
+                // Read till the end of the data into a row
+                tag.Tag_id = (string)dr["tag_id"];
+                tag.Tag_title = (string)dr["tag_title"];
+                list.Add(tag);
+            }
+            return list;
+        }
+
         public IList SPGetResults<T>(Search<T> search)
         {
             //IList<T> list;
@@ -888,38 +962,7 @@ namespace Prices.DAL.SQLConnection
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
                 if (search.Model is Item)
                 {
-
-                    List<Item> list = new List<Item>();
-                    while (dr.Read())
-                    {
-                        Item item = new Item();
-                        // Read till the end of the data into a row
-                        item.Item_id = (string)dr["item_id"];
-                        item.Receipt_id = (string)dr["receipt_id"];
-                        item.Receipt_image = (string)dr["receipt_image"];
-                        item.Barcode = dr["barcode"].ToString();
-                        item.Receipt_description = (string)dr["receipt_description"];
-                        item.Receipt_discount_dollar = (double)dr["receipts_discount_dollar"];
-                        item.Receipt_discount_percent = (double)dr["receipts_discount_percent"];
-                        item.Item_title = (string)dr["item_title"];
-                        item.Price = (double)dr["price"];
-                        item.Discount_dollar = (double)dr["discount_dollar"];
-                        item.Discount_percent = (double)dr["discount_percent"];
-                        item.Item_Description = (string)dr["item_description"];
-                        item.User_id = (string)dr["user_id"];
-                        item.Item_image = (string)dr["item_image"];
-                        item.Id_type = (string)dr["id_type"];
-                        item.Store_name = (string)dr["store_name"];
-                        if (search.Statement_Type != "verifyReceipts")
-                        {
-                            item.Store_lat = Convert.ToString(dr["lat"]);
-                            item.Store_lon = Convert.ToString(dr["lon"]);
-                            item.Distance = (double)dr["distance"];
-                            item.User_rank = Convert.ToString(dr["user_rank"]);
-                        }
-                        list.Add(item);
-                    }
-                    return list;
+                    return ReadItems(search, dr);
                 }
 
                 #region for later
@@ -992,6 +1035,42 @@ namespace Prices.DAL.SQLConnection
                     con.Close();
                 }
             }
+        }
+
+        private static IList ReadItems<T>(Search<T> search, SqlDataReader dr)
+        {
+            List<Item> list = new List<Item>();
+            while (dr.Read())
+            {
+                Item item = new Item();
+                // Read till the end of the data into a row
+                item.Item_id = (string)dr["item_id"];
+                item.Receipt_id = (string)dr["receipt_id"];
+                item.Receipt_image = (string)dr["receipt_image"];
+
+                item.Barcode = dr["barcode"].ToString();
+                item.Receipt_description = (string)dr["receipt_description"];
+                item.Receipt_discount_dollar = (double)dr["receipts_discount_dollar"];
+                item.Receipt_discount_percent = (double)dr["receipts_discount_percent"];
+                item.Item_title = (string)dr["item_title"];
+                item.Price = (double)dr["price"];
+                item.Discount_dollar = (double)dr["discount_dollar"];
+                item.Discount_percent = (double)dr["discount_percent"];
+                item.Item_Description = (string)dr["item_description"];
+                item.User_id = (string)dr["user_id"];
+                item.Item_image = (string)dr["item_image"];
+                item.Id_type = (string)dr["id_type"];
+                item.Store_name = (string)dr["store_name"];
+                if (search.Statement_Type != "verifyReceipts")
+                {
+                    item.Store_lat = Convert.ToString(dr["lat"]);
+                    item.Store_lon = Convert.ToString(dr["lon"]);
+                    item.Distance = (double)dr["distance"];
+                    item.User_rank = Convert.ToString(dr["user_rank"]);
+                }
+                list.Add(item);
+            }
+            return list;
         }
         #endregion
 
